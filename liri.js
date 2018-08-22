@@ -9,13 +9,13 @@ var src = fs.readFileSync(__dirname + '/random.txt');
 
 var request = require("request");
 
+var Spotify = require('node-spotify-api');
+
 var spotify = new Spotify(keys.spotify);
 
 var client = new Twitter(keys.twitter);
 
 var inputString = process.argv;
-
-function Spotify(){};
 
 function Twitter(){};
 
@@ -43,26 +43,33 @@ if (input === "movie-this"){
 if (input === "do-what-it-says"){
     doWhatItSays()
 }
+if (input === "movieThis" && inputAlt === null ) {
+  var inputAlt = "Mr. Nobody"
+  movieThis()
+}
+if (input === "spotifyThisSong" && inputAlt === null) {
+  var inputAlt = "The Sign"
+}
 
 function myTweets(){
 
 }
-function spotifyThisSong(inputAlt){
-    //Artist(s)
-    //input must be converted
+function spotifyThisSong(){
 
-    var newInput = inputAlt.replace(/ /g, "+")
-    request("https://api.spotify.com/v1/search?query" + newInput + "&type=track", function(error, response){
+      
 
-      if (!error && response.statusCode === 200) {
+      spotify.search({ type: 'track', query: inputAlt, limit: 1}, function(error, response) {
+      //converts the response from an object to a json string
+      var data = JSON.stringify(response)
+      console.log(data);
+      //
+      console.log(JSON.parse(response.tracks).items.album.artists.name)
 
-    //The song's name
-    console.log("This song's artist is: " + JSON.parse(response.body).tracks.items.album.artists.name)
-    //A preview link of the song from Spotify
-    console.log("This song's preview is: " + JSON.parse(response.body).tracks.items.preview_url)
-    //The album that the song is from
-    console.log("This song's album is: " + JSON.parse(response.body).tracks.items.album.name)
-    }
+      console.log("This song's artist is: " + JSON.parse(data.tracks).items.album.artists.name)
+
+
+
+
   })
 }
 function movieThis(){
@@ -84,11 +91,11 @@ function movieThis(){
         // Parse the body of the site and recover just the imdbRating
         // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
         console.log("The movie's rating is: " + JSON.parse(response.body).imdbRating)
-        console.log("The movie's title is: " + JSON.parse(response.body).imdbTitle)
-        console.log("The movie's Country is: " + JSON.parse(response.body).imdbCountry)
-        console.log("The movie's language is: " + JSON.parse(response.body).imdbLanguage)
-        console.log("The movie's actors is: " + JSON.parse(response.body).imdbActors)
-        console.log("The movie's release year is: " + JSON.parse(response.body).imdbYear)
+        console.log("The movie's title is: " + JSON.parse(response.body).Title)
+        console.log("The movie's Country is: " + JSON.parse(response.body).Country)
+        console.log("The movie's language is: " + JSON.parse(response.body).Language)
+        console.log("The movie's actors is: " + JSON.parse(response.body).Actors)
+        console.log("The movie's release year is: " + JSON.parse(response.body).Year)
 
         }
     })
