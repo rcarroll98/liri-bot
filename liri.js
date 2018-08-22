@@ -52,24 +52,29 @@ if (input === "spotifyThisSong" && inputAlt === null) {
 }
 
 function myTweets(){
-
+  //My twitter account was not allowed developer access
 }
 function spotifyThisSong(){
 
-      
+
 
       spotify.search({ type: 'track', query: inputAlt, limit: 1}, function(error, response) {
-      //converts the response from an object to a json string
+      //converts the response from an object to a json string, however, json wont parse through this string
+      //or the non-stringified object
       var data = JSON.stringify(response)
+
       console.log(data);
-      //
+
+      if (!error && response.statusCode === 200) {
+      //parses through the string using json to console log the name of the artist
       console.log(JSON.parse(response.tracks).items.album.artists.name)
-
-      console.log("This song's artist is: " + JSON.parse(data.tracks).items.album.artists.name)
-
-
-
-
+      //parses through the string using json to console log the name of the song name
+      console.log("This song's artist is: " + JSON.parse(data.tracks).items.name)
+      //parses through the string using json to console log the preview link
+      console.log("This song's artist is: " + JSON.parse(data.tracks).items.album.artists.preview_url)
+      //parses through the string using json to console log the album the song is from
+      console.log("This song's artist is: " + JSON.parse(data.tracks).items.album.name)
+    }
   })
 }
 function movieThis(){
